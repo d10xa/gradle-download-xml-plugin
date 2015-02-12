@@ -1,0 +1,55 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6"
+    }
+}
+apply plugin: 'groovy'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven'
+
+sourceCompatibility = 1.5
+
+version = '0.0.1'
+group = 'ru.d10xa'
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile gradleApi()
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+configurations {
+    published
+}
+task sourceJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+artifacts {
+    published sourceJar
+}
+bintray {
+    user = this.hasProperty('bintrayUser') ? bintrayUser : ''
+    key = this.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
+    configurations = ['published', 'archives']
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'ru.d10xa:gradle-download-xml-plugin'
+        desc = 'Downloading xml files with dependencies'
+        websiteUrl = 'https://github.com/d10xa/gradle-download-xml-plugin'
+        issueTrackerUrl = 'https://github.com/d10xa/gradle-download-xml-plugin/issues'
+        vcsUrl = 'https://github.com/d10xa/gradle-download-xml-plugin.git'
+        licenses = ['MIT']
+        publicDownloadNumbers = true
+        version {
+            name = project.version
+        }
+    }
+}
