@@ -7,9 +7,7 @@ Apply plugin
 ```groovy
 buildscript {
     repositories {
-        maven {
-            url 'http://dl.bintray.com/d10xa/maven'
-        }
+        jcenter()
     }
     dependencies {
         classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.1'
@@ -39,4 +37,11 @@ task downloadWsdl << {
     
     println 'Download Complete...'
 }
+```
+
+schema locations will be overwritten by the relative
+```xml
+<!--in a/b/c/schema-crm.xsd-->
+<xsd:import schemaLocation="../../../x/y/z/schema-common.xsd"
+    namespace="http://predic8.com/common/1/"></xsd:import>
 ```
