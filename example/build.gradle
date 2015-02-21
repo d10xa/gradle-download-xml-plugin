@@ -1,11 +1,9 @@
 buildscript {
     repositories {
-        maven {
-            url 'http://dl.bintray.com/d10xa/maven'
-        }
+        jcenter()
     }
     dependencies {
-        classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.1'
+        classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.2'
     }
 }
 

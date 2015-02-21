@@ -8,6 +8,8 @@ class DownloadXmlAction implements DownloadXmlSpec {
     private List<URL> sources = new ArrayList<URL>(1)
     private File dest
     private Map<String,String> namespaceToFile = [:]
+    private String username
+    private String password
     
     public void execute(Project project){
         def xmls = getAllXmls()
@@ -56,7 +58,7 @@ class DownloadXmlAction implements DownloadXmlSpec {
     private Set<Xml> getAllXmls(){
         Set<Xml> xmls = new HashSet<>()
         sources.each {
-            def xml = new Xml(it)
+            def xml = new Xml(it,basicAuth)
             xmls.add(xml)
             xmls.addAll(xml.innerXml)
         }
@@ -111,8 +113,22 @@ class DownloadXmlAction implements DownloadXmlSpec {
         }
     }
 
+    private BasicAuth getBasicAuth(){
+        return new BasicAuth(username,password)
+    }
+
     @Override
     void namespaceToFile(Map map) {
         namespaceToFile = map
+    }
+
+    @Override
+    void username(String username) {
+        this.username = username
+    }
+
+    @Override
+    void password(String password) {
+        this.password = password
     }
 }

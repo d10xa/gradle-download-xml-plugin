@@ -14,21 +14,26 @@ import javax.xml.xpath.XPathFactory
 @ToString(includes = "url", includePackage = false)
 class Xml {
 
-    String text
     URL url
+    BasicAuth basicAuth
 
-    Xml(Object url) {
-        if(url instanceof CharSequence){
-            this.url = url.toURL()
-        } else if(url instanceof URL){
-            this.url = url
-        }
-        this.text = getTextFromUrl(url)
-    }
-    
+    Xml (CharSequence url){ this.url = url.toURL() }
+    Xml (URL url) {this.url = url}
+    Xml (URL url,BasicAuth basicAuth) {this.url = url;this.basicAuth = basicAuth}
+
     @Memoized
-    private static getTextFromUrl(URL url){
-        url.text
+    private static getTextFromUrl(URL url,BasicAuth basicAuth){
+        if (basicAuth){
+            def connection = url.openConnection()
+            basicAuth.fillRequestProperty(connection)
+            return connection.content.text
+        } else {
+           return url.text
+        }
+    }
+
+    public String getText(){
+        getTextFromUrl(url,basicAuth)
     }
 
     @Memoized
@@ -69,7 +74,7 @@ class Xml {
 
     @Memoized
     public Set<Xml> getInnerXml(){
-        return new XmlLoader(url,false).getInnerXml();
+        return new XmlLoader(url,basicAuth).getInnerXml();
     }
 
 }

@@ -6,14 +6,14 @@ buildscript {
         classpath "com.jfrog.bintray.gradle:gradle-bintray-plugin:0.6"
     }
 }
+
 apply plugin: 'groovy'
 apply plugin: 'com.jfrog.bintray'
-apply plugin: 'maven'
+
+version = currentVersion
+group = 'ru.d10xa'
 
 sourceCompatibility = 1.5
-
-version = '0.0.1'
-group = 'ru.d10xa'
 
 repositories {
     jcenter()
@@ -21,19 +21,22 @@ repositories {
 
 dependencies {
     compile gradleApi()
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'junit:junit:4.12'
 }
 
 configurations {
     published
 }
+
 task sourceJar(type: Jar) {
     from sourceSets.main.allSource
     classifier = 'sources'
 }
+
 artifacts {
     published sourceJar
 }
+
 bintray {
     user = this.hasProperty('bintrayUser') ? bintrayUser : ''
     key = this.hasProperty('bintrayApiKey') ? bintrayApiKey : ''
@@ -42,14 +45,16 @@ bintray {
     pkg {
         repo = 'maven'
         name = 'ru.d10xa:gradle-download-xml-plugin'
-        desc = 'Downloading xml files with dependencies'
+        desc = 'A Gradle plugin for downloading xml files(wsdl,xsd) with recursive imports and includes'
         websiteUrl = 'https://github.com/d10xa/gradle-download-xml-plugin'
         issueTrackerUrl = 'https://github.com/d10xa/gradle-download-xml-plugin/issues'
         vcsUrl = 'https://github.com/d10xa/gradle-download-xml-plugin.git'
         licenses = ['MIT']
+        labels = ['xml','wsdl','xsd','download', 'gradle', 'plugin']
         publicDownloadNumbers = true
         version {
             name = project.version
+            attributes = [ 'gradle-plugin': 'ru.d10xa.download-xml:ru.d10xa:gradle-download-xml-plugin' ]
         }
     }
 }
