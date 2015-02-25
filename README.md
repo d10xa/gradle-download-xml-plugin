@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.1'
+        classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.2'
     }
 }
 
@@ -33,6 +33,8 @@ task downloadWsdl << {
                 'http://predic8.com/crm/1/'                : 'a/b/c/schema-crm.xsd',
                 'http://predic8.com/common/1/'             : 'x/y/z/schema-common.xsd'
         ])
+        // username 'foo' // optional
+        // password 'bar' // optional
     }
     
     println 'Download Complete...'
