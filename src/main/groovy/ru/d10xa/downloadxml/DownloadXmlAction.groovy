@@ -1,24 +1,26 @@
 package ru.d10xa.downloadxml
+
+import groovy.transform.Memoized
 import org.gradle.api.Project
 
 import java.lang.reflect.Array
 
 class DownloadXmlAction implements DownloadXmlSpec {
 
-    private List<URL> sources = new ArrayList<URL>(1)
+    private Project project
+    private Set<URL> sources = new LinkedHashSet<URL>(1)
     private File dest
     private Map<String,String> namespaceToFile = [:]
     private String username
     private String password
     
     public void execute(Project project){
-        def xmls = getAllXmls()
-        xmls.each {
-            def ns = it.targetNamespace
-            if(namespaceToFile.containsKey(ns)){
-                save(it)
-            } else {
-                println "namespace not mapped ${it.targetNamespace}"
+        this.project = project
+        mappedXmls.each {save(it)}
+        if(notMappedNamespaces.size()>0){
+            project.logger.warn("Some namespaces are not mapped. Try to add it to downloadXml extension")
+            notMappedNamespaces.each {
+                project.logger.warn "'${it}':'${NamespaceUtils.namespaceToFileName(it)}',"
             }
         }
     }
@@ -55,8 +57,37 @@ class DownloadXmlAction implements DownloadXmlSpec {
         return resultXml
     }
 
+    @Memoized
+    private Set<Xml> getMappedXmls(){
+        allXmls.findAll {namespaceToFile.containsKey(it.targetNamespace)}
+    }
+
+    @Memoized
+    private Set<Xml> getNotMappedXmls(){
+        allXmls.findAll {!namespaceToFile.containsKey(it.targetNamespace)}
+    }
+
+    @Memoized
+    private Set<String> getNotMappedNamespaces(){
+        def result  = new TreeSet()
+        def xmls = getNotMappedXmls()
+        for (Xml xml: xmls ) {
+            result += xml.targetNamespace
+        }
+        return result
+    }
+
+    @Memoized
     private Set<Xml> getAllXmls(){
-        Set<Xml> xmls = new HashSet<>()
+        Set<Xml> xmls = new TreeSet<>(new Comparator<Xml>() {
+            @Override
+            int compare(Xml o1, Xml o2) {
+                if(o1?.url==null||o2?.url==null){
+                    return false
+                }
+                return o1.url.toString().compareTo(o2.url.toString())
+            }
+        })
         sources.each {
             def xml = new Xml(it,basicAuth)
             xmls.add(xml)
@@ -68,7 +99,7 @@ class DownloadXmlAction implements DownloadXmlSpec {
     @Override
     void src(Object src) {
         if (sources == null) {
-            sources = new ArrayList<URL>(1);
+            sources = new LinkedHashSet<URL>(1);
         }
         if (src instanceof Closure) {
             //lazily evaluate closure

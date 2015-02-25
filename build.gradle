@@ -45,13 +45,6 @@ bintray {
     pkg {
         repo = 'maven'
         name = 'ru.d10xa:gradle-download-xml-plugin'
-        desc = 'A Gradle plugin for downloading xml files(wsdl,xsd) with recursive imports and includes'
-        websiteUrl = 'https://github.com/d10xa/gradle-download-xml-plugin'
-        issueTrackerUrl = 'https://github.com/d10xa/gradle-download-xml-plugin/issues'
-        vcsUrl = 'https://github.com/d10xa/gradle-download-xml-plugin.git'
-        licenses = ['MIT']
-        labels = ['xml','wsdl','xsd','download', 'gradle', 'plugin']
-        publicDownloadNumbers = true
         version {
             name = project.version
             attributes = [ 'gradle-plugin': 'ru.d10xa.download-xml:ru.d10xa:gradle-download-xml-plugin' ]
