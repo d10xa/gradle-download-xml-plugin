@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://localhost/bar"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified" version="1.0.0">
+    
+    <xs:element name="x" type="xs:string"/>
+    
+    <xs:complexType name="Bar">
+        <xs:sequence>
+            <xs:element type="xs:string" name="barName"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

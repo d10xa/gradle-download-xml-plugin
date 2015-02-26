@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://localhost/foo"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:bar="http://localhost/bar"
+           elementFormDefault="qualified" version="1.0.0">
+
+    <xs:import namespace="http://localhost/bar" schemaLocation="bar.xsd"/>
+
+    <xs:element name="bar" type="bar:Bar"/>
+
+    <xs:complexType name="Foo">
+        <xs:sequence>
+            <xs:element type="xs:string" name="fooName"/>
+            <xs:element name="bar" type="bar:Bar"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>

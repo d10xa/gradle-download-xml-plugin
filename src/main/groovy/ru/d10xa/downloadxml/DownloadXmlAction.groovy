@@ -2,6 +2,7 @@ package ru.d10xa.downloadxml
 
 import groovy.transform.Memoized
 import org.gradle.api.Project
+import org.gradle.util.ConfigureUtil
 
 import java.lang.reflect.Array
 
@@ -13,14 +14,23 @@ class DownloadXmlAction implements DownloadXmlSpec {
     private Map<String,String> namespaceToFile = [:]
     private String username
     private String password
+    private LocationParams locations
+    
+    void warn (String s){
+        if(project){
+            project.logger.warn s
+        } else {
+            println s
+        }
+    }
     
     public void execute(Project project){
         this.project = project
-        mappedXmls.each {save(it)}
+        mappedXmls.each {save it}
         if(notMappedNamespaces.size()>0){
-            project.logger.warn("Some namespaces are not mapped. Try to add it to downloadXml extension")
+            warn("Some namespaces are not mapped. Try to add it to downloadXml extension")
             notMappedNamespaces.each {
-                project.logger.warn "'${it}':'${NamespaceUtils.namespaceToFileName(it)}',"
+                warn "'${it}':'${NamespaceUtils.namespaceToFileName(it)}',"
             }
         }
     }
@@ -43,12 +53,17 @@ class DownloadXmlAction implements DownloadXmlSpec {
             def ns = it.targetNamespace
             def localPath = namespaceToFile.get(ns)
             if(localPath==null){
-                throw new NullPointerException(ns)
-                
+                return
             }
-            def to = new File(dest, localPath)
-            def relative = RelativePath.convertToRelativePath(thisFile.parent,to.absolutePath)
-            replaceMap.put(it.url.toString(), relative)
+            
+            def to = new File(dest, localPath).absolutePath
+            def from = thisFile.parentFile.absolutePath
+            
+            def relative = RelativePath.convertToRelativePath(from,to)
+
+            def locationName = it.rawUrl ?: it.url.toString()
+            
+            replaceMap.put(locationName, relative)
         }
         String resultXml = xml.text
         replaceMap.each {k,v->
@@ -89,7 +104,12 @@ class DownloadXmlAction implements DownloadXmlSpec {
             }
         })
         sources.each {
-            def xml = new Xml(it,basicAuth)
+            def xml = new Xml(
+                    url:it,
+                    basicAuth:basicAuth,
+                    locationParams: locations
+            )
+            xml.locationParams = this.locations
             xmls.add(xml)
             xmls.addAll(xml.innerXml)
         }
@@ -161,5 +181,16 @@ class DownloadXmlAction implements DownloadXmlSpec {
     @Override
     void password(String password) {
         this.password = password
+    }
+
+    @Override
+    void locations(Object locations) {
+        if(locations instanceof Closure){
+            this.locations = ConfigureUtil.configure(locations,new LocationParams())
+        } else if(locations instanceof LocationParams){
+            this.locations = locations
+        } else {
+            throw new IllegalArgumentException("'locations' must be Closure");
+        }
     }
 }

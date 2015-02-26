@@ -12,11 +12,9 @@ class XmlLoader {
     private Map<Xml,Boolean> documentsMap = new ConcurrentHashMap<>();
 
     Xml rootDocument
-    BasicAuth basicAuth
 
-    XmlLoader(URL url,BasicAuth basicAuth) {
-        rootDocument = new Xml(url,basicAuth)
-        this.basicAuth = basicAuth
+    XmlLoader(Xml rootDocument) {
+        this.rootDocument = rootDocument
         extractSchemaLocations()
     }
 
@@ -35,7 +33,7 @@ class XmlLoader {
     }
 
     void extractSchemaLocations(){
-        addIfNotExists(rootDocument.getSchemaLocations())
+        addIfNotExists rootDocument.getSchemaLocations()
         while (hasNotVisited()){
             def iterator = documentsMap.iterator()
 
@@ -47,11 +45,14 @@ class XmlLoader {
         }
     }
 
-    private void addIfNotExists(List<String> locationsList){
-        for (String str : locationsList) {
-            URL url = str.toURL()
-            Xml doc = new Xml(url,basicAuth)
-
+    private void addIfNotExists(List<Location> locationsList){
+        for (Location location : locationsList) {
+            def processed = location?.getProcessed()
+            URL url = processed?.toURL()
+            Xml doc = new Xml(rootDocument,url)
+            if(location.isMalformed()){
+                doc.rawUrl = location.raw
+            }
             if (!documentsMap.containsKey(doc)){
                 putNewXml(doc);
             }

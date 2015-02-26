@@ -6,4 +6,5 @@ public interface DownloadXmlSpec {
     void namespaceToFile(Map map)
     void username(String username)
     void password(String password)
+    void locations(Object locations)
 }

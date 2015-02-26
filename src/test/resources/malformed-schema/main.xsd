@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://localhost/main"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:foo="http://localhost/foo"
+           elementFormDefault="qualified" version="1.0">
+
+    <xs:import namespace="http://localhost/foo" schemaLocation="foo.xsd"/>
+
+    <xs:element name="foo" type="foo:Foo"/>
+    
+    <xs:complexType name="Main">
+        <xs:sequence>
+            <xs:element name="foo" type="foo:Foo"/>
+        </xs:sequence>
+    </xs:complexType>
+    
+</xs:schema>
