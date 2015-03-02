@@ -4,13 +4,22 @@ Gradle Download Xml Plugin
 Apply plugin
 ------------
 
+### Gradle >= 2.1
+
+```groovy
+plugins {
+    id 'ru.d10xa.download-xml' version '0.0.4'
+}
+
+### Gradle < 2.1
+
 ```groovy
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.2'
+        classpath 'ru.d10xa:gradle-download-xml-plugin:0.0.4'
     }
 }
 
@@ -35,6 +44,7 @@ task downloadWsdl << {
         ])
         // username 'foo' // optional
         // password 'bar' // optional
+        // locations { malformedLocationHandler { "http://localhost:8080/$it" } } // optional
     }
     
     println 'Download Complete...'
@@ -46,4 +56,14 @@ schema locations will be overwritten by the relative
 <!--in a/b/c/schema-crm.xsd-->
 <xsd:import schemaLocation="../../../x/y/z/schema-common.xsd"
     namespace="http://predic8.com/common/1/"></xsd:import>
+```
+
+Malformed schema locations
+--------------------------
+
+You can handle local schema locations with malformedLocationHandler
+```groovy
+locations { 
+    malformedLocationHandler { "http://localhost:8080/$it" }
+}
 ```
