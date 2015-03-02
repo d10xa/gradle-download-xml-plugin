@@ -10,6 +10,7 @@ Apply plugin
 plugins {
     id 'ru.d10xa.download-xml' version '0.0.4'
 }
+```
 
 ### Gradle < 2.1
 
@@ -44,7 +45,11 @@ task downloadWsdl << {
         ])
         // username 'foo' // optional
         // password 'bar' // optional
-        // locations { malformedLocationHandler { "http://localhost:8080/$it" } } // optional
+        // locations {
+        //      malformedLocationHandler { 
+        //          "http://localhost:8080/$it" // optional
+        //      } 
+        // }
     }
     
     println 'Download Complete...'
