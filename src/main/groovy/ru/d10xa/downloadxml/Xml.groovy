@@ -38,7 +38,7 @@ class Xml {
         if (basicAuth) {
             def connection = url.openConnection()
             basicAuth.fillRequestProperty(connection)
-            return connection.content.text
+            return connection.inputStream.text
         } else {
             return url.text
         }
