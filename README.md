@@ -1,6 +1,8 @@
 Gradle Download Xml Plugin
 ==========================
 
+[ ![Download](https://api.bintray.com/packages/d10xa/maven/ru.d10xa%3Agradle-download-xml-plugin/images/download.svg) ](https://bintray.com/d10xa/maven/ru.d10xa%3Agradle-download-xml-plugin/_latestVersion)
+
 Apply plugin
 ------------
 
