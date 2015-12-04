@@ -11,10 +11,10 @@ class LocationTest {
                 raw: "abc",
                 locationsProcessor: new LocationsProcessor(handler)
         )     
-        
+
         assert location.raw == 'abc'
         assert location.processed == 'http://localhost:8080/abc'
-        assert location.isMalformed() == true
+        assert location.malformed == true
     }
     
     @Test void 'well formed location test'(){
@@ -27,7 +27,7 @@ class LocationTest {
 
         assert location.raw == 'http://localhost:8080/abc'
         assert location.processed == 'http://localhost:8080/abc'
-        assert location.isMalformed() == false
+        assert location.malformed == false
     }
 
 

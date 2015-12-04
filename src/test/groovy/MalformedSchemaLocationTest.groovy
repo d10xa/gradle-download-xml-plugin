@@ -20,12 +20,12 @@ class MalformedSchemaLocationTest {
     }
     
     @Before
-    public void executeTask(){
+    void executeTask(){
         ConfigureUtil.configure(downloadTask, new DownloadXmlAction()).execute()
     }
 
     @Test
-    public void 'download with malformed location'() {
+    void 'download with malformed location'() {
         assert new File(testDir,'test-main.xml').text.contains('schemaLocation="test-foo.xml"')
         assert new File(testDir,'test-foo.xml').text.contains('schemaLocation="test-bar.xml"')
     }
